@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="description" content="A web application that uses REST API to pull data on all countries.">
+    <meta name="keywords" content="countries, rest api, flag, currency, region, population">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;600;800&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="./icons8-favicon-94.png" type="image/x-icon">
+    <title>Where in the world?</title>
+</head>
+<body id="body">
+    <header>
+        <div class="container">
+            <h1>Where in the world?</h1>
+            <button id="dark-button">
+                <span>
+                    <i class="fa-solid fa-sun"></i>
+                    <i class="fa-sharp fa-solid fa-moon active"></i>
+                </span>
+                Dark Mode
+            </button>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <section class="forms">
+                <form id="form">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="search" name="search" id="search" autocomplete="off" placeholder="Search for a country...">
+                </form>
+                <div class="filter">
+                    <button>
+                        <span>Filter by Region</span>
+                        <i class="fa-solid fa-angle-down"></i>
+                    </button>
+                    <div class="regions">
+                        <button class="options">All</button>
+                        <button class="options">Africa</button>
+                        <button class="options">Americas</button>
+                        <button class="options">Asia</button>
+                        <button class="options">Europe</button>
+                        <button class="options">Oceania</button>
+                    </div>
+                </div>
+            </section>
+            <section id="countries" class="countries"></section>
+        </div>
+    </main>
+    <script src="./js/script.js"></script>
+</body>
+</html>
