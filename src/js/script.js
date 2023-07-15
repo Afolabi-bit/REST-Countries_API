@@ -3,9 +3,13 @@ const path = '.././data.json';
 const countriesWrapper = document.getElementById('countries');
 const filterBtns = document.querySelectorAll('.options');
 const form = document.getElementById('form');
+const formWrapper = document.getElementById('forms');
 const darkBtn = document.getElementById('dark-button');
 const body = document.getElementById('body');
+let backBtn;
+let countries;
 let key;
+let allCountries;
 
 //Get countries onload
 getCountry(`${url1}all`);
@@ -14,15 +18,11 @@ getCountry(`${url1}all`);
 //APIcall
 async function getCountry(url) {
     let res = await fetch(url);
-    data = await res.json();
+    countries = await res.json();
 
-    showCountries(data);
-}
-
-
-//Allow more details onClick
-function openCountry() {
-    
+    showCountries(countries);
+    allCountries = document.querySelectorAll('.country');
+    countryNodelist(allCountries);
 }
 
 //Filter by region
@@ -30,14 +30,14 @@ filterBtns.forEach(btn => {
     btn.addEventListener('click', ()=>{
         key = btn.textContent;
         if (key == 'All')
-            showCountries(data);
+            showCountries(countries);
         else
-            filterData(data);
+            filterData(countries);
     })
 })
 
-function filterData(data) {
-    let region = data.filter((d) => d.region == key)
+function filterData(dataArr) {
+    let region = dataArr.filter((data) => data.region == key)
     showCountries(region);
 }
 
@@ -81,6 +81,9 @@ function showCountries(data) {
             `
             countriesWrapper.appendChild(div);
     }
+
+    allCountries = document.querySelectorAll('.country');
+    countryNodelist(allCountries);
 }
 
 //Search feature
@@ -90,17 +93,21 @@ form.addEventListener('submit', (e) => {
     let name =  field.value.trim();
 
     if(name && name != '') {
-        searchCountry('https://restcountries.com/v3.1/name/' + name);
-        field.value = '';
+        searchCountry('https://restcountries.com/v3.1/name/' + name, 'search');
     }
     else
         window.location.reload()
 })
 
-async function searchCountry(url) {
+async function searchCountry(url, id) {
     let res = await fetch(url);
-    data = await res.json();
-    showCountries(data);
+    countries = await res.json();
+
+    if (id == 'search'){
+        showCountries(countries);
+    }
+    else
+        openCountry(countries);
 }
 
 
@@ -108,3 +115,96 @@ async function searchCountry(url) {
 darkBtn.addEventListener('click', ()=>{
     body.classList.toggle("dark");
 })
+
+/** Expand a country */
+function countryNodelist(list){
+    list.forEach(item =>{
+        item.addEventListener('click', ()=>{
+            const countryName = item.children[1].children[0].textContent;
+            searchCountry('https://restcountries.com/v3.1/name/' + countryName, 'expand');
+        })
+    })
+}
+
+function openCountry(c){
+    let {name, population, flags, region, subregion, capital, currencies, tld, languages} = c[0];
+    
+    let n = Object.keys(name.nativeName);
+    let curr = Object.keys(currencies);
+    let lang = Object.keys(languages).toString();
+
+
+    let nativeName = name.nativeName[n[0]].common;
+    currencies = currencies[curr[0]].name;
+    name = name.common
+
+
+    countriesWrapper.innerHTML = '';
+    countriesWrapper.classList.add('expanded');
+    formWrapper.innerHTML = '';
+
+
+    const div = document.createElement('div');
+
+    div.className = 'expanded-country';
+    div.innerHTML = `
+        <button id="back">
+            <img src="./arrow.png" alt="icon" />
+            <span>Back</span>
+        </button> 
+        <div class="flex">
+            <img src="${flags.png}" alt="${name.common}" />
+            <div class="text">
+                <h2>${name}</h2>
+                <div class="flex">
+                    <div class="left">
+                        <p>
+                            <span>Native Name:</span>
+                            ${nativeName}
+                        </p>
+                        <p>
+                            <span>Population:</span>
+                            ${population}
+                        </p>
+                        <p>
+                            <span>Region:</span>
+                            ${region}
+                        </p>
+                        <p>
+                            <span>Sub Region:</span>
+                            ${subregion}
+                        </p>
+                        <p>
+                            <span>Capital:</span>
+                            ${capital}
+                        </p>
+                    </div>
+                    <div class="right">
+                        <p>
+                            <span>Top Level Domain:</span>
+                            ${tld}
+                        </p>
+                        <p>
+                            <span>Currencies:</span>
+                            ${currencies}
+                        </p>
+                        <p>
+                            <span>Languages:</span>
+                            ${lang}
+                        </p>
+                    </div>
+                </div>
+        </div>
+    `
+    countriesWrapper.appendChild(div);
+    back();
+}
+
+function back(){
+    backBtn = document.getElementById('back');
+    
+    backBtn.addEventListener('click', ()=>{
+        window.location.reload();
+    })
+}
+
