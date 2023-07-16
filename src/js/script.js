@@ -57,7 +57,7 @@ function showCountries(data) {
                     <h2 class="name">${name.common}</h2>
                     <p><span>Population:</span>${population}</p>
                     <p><span>Region:</span>${region}</p>
-                    <p><span>Capital:</span>${capital}</p>
+                    <p><span>Capital:</span>${capital ? capital : ""}</p>
                 </div>
             `
             countriesWrapper.appendChild(div);
@@ -76,7 +76,7 @@ function showCountries(data) {
                     <h2 class="name">${name.common}</h2>
                     <p><span>Population:</span>${population}</p>
                     <p><span>Region:</span>${region}</p>
-                    <p><span>Capital:</span>${capital}</p>
+                    <p><span>Capital:</span>${capital ? capital : ""}</p>
                 </div>
             `
             countriesWrapper.appendChild(div);
@@ -127,29 +127,29 @@ function countryNodelist(list){
 }
 
 function openCountry(c){
-    let {name, population, flags, region, subregion, capital, currencies, tld, languages} = c[0];
+    let {name, population, flags, region, subregion, capital, currencies, tld, languages, borders} = c[0];
     
-    let n = Object.keys(name.nativeName);
-    let curr = Object.keys(currencies);
-    let lang = Object.keys(languages).toString();
+    let n, curr, lang, nativeName;
+    if (name.nativeName && currencies && languages){
+        n = Object.keys(name.nativeName);
+        nativeName = name.nativeName[n[0]].common;
+        curr = Object.keys(currencies);
+        currencies = currencies[curr[0]].name;
+        lang = Object.keys(languages).toString();
+    }
 
-
-    let nativeName = name.nativeName[n[0]].common;
-    currencies = currencies[curr[0]].name;
     name = name.common
-
 
     countriesWrapper.innerHTML = '';
     countriesWrapper.classList.add('expanded');
     formWrapper.innerHTML = '';
-
 
     const div = document.createElement('div');
 
     div.className = 'expanded-country';
     div.innerHTML = `
         <button id="back">
-            <img src="./arrow.png" alt="icon" />
+            <i class="fa-solid fa-arrow-left"></i>
             <span>Back</span>
         </button> 
         <div class="flex">
@@ -160,7 +160,7 @@ function openCountry(c){
                     <div class="left">
                         <p>
                             <span>Native Name:</span>
-                            ${nativeName}
+                            ${nativeName ? nativeName : ''}
                         </p>
                         <p>
                             <span>Population:</span>
@@ -172,11 +172,11 @@ function openCountry(c){
                         </p>
                         <p>
                             <span>Sub Region:</span>
-                            ${subregion}
+                            ${subregion ? subregion : ''}
                         </p>
                         <p>
                             <span>Capital:</span>
-                            ${capital}
+                            ${capital ? capital : ''}
                         </p>
                     </div>
                     <div class="right">
@@ -186,18 +186,38 @@ function openCountry(c){
                         </p>
                         <p>
                             <span>Currencies:</span>
-                            ${currencies}
+                            ${currencies ? currencies : ''}
                         </p>
                         <p>
                             <span>Languages:</span>
-                            ${lang}
+                            ${lang ? lang : ''}
                         </p>
                     </div>
                 </div>
+                <div class="borders">
+                    <h3>Border Countries:</h3>
+                    <div class="buttons" id="buttons"></div>
+                </div>
+            </div>
         </div>
     `
     countriesWrapper.appendChild(div);
+    loop(borders);
     back();
+    openBorder();
+}
+
+function loop(arr){
+    if(arr){
+        const parent = document.getElementById('buttons');
+        for (let i = 0; i < arr.length; i++){
+            let b = document.createElement('button');b
+            b.className = 'border-btn'
+            b.innerHTML = `${arr[i]}`;
+            button = b;
+            parent.appendChild(b)
+        }
+    }
 }
 
 function back(){
@@ -208,3 +228,12 @@ function back(){
     })
 }
 
+function openBorder(){
+    let borderBtns = document.querySelectorAll('.border-btn')
+    borderBtns.forEach(btn => {
+        btn.addEventListener('click', ()=>{
+            let name = btn.innerHTML;
+            searchCountry('https://restcountries.com/v3.1/name/' + name, 'expand');
+        })
+    })
+}

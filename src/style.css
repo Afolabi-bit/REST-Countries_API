@@ -269,7 +269,7 @@ main {
 }
 
 .expanded .text {
-    padding: 30px 0;
+    padding: 20px 0 ;
     width: 45%;
 }
 
@@ -292,9 +292,35 @@ main {
     font-size: 14px;
 }
 
-.expanded p span {
+.expanded p span
+ {
     font-size: 16px;
     font-weight: 600;
+}
+
+.expanded .borders {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.borders h3{
+    font-size: 16px;
+    font-weight: 800;
+    display: inline;
+    width: 136px;
+}
+
+.borders .buttons {
+    width: calc(100% - 150px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.borders button {
+    display: inline;
+    
 }
 
 
@@ -322,7 +348,8 @@ body.dark {
 .dark #search,
 .dark #search::placeholder,
 .dark .regions,
-.dark .filter button {
+.dark .filter button,
+.dark .expanded button i {
     color: var(--darkLight);
 }
 
