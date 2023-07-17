@@ -6,19 +6,27 @@ const form = document.getElementById('form');
 const formWrapper = document.getElementById('forms');
 const darkBtn = document.getElementById('dark-button');
 const body = document.getElementById('body');
-let backBtn;
-let countries;
-let key;
-let allCountries;
+let backBtn, countries, key, allCountries, check;
 
 //Get countries onload
-getCountry(`${url1}all`);
+checkReload();
+function checkReload(){
+    if(check > 0) {
+        countriesWrapper.classList.remove('expanded');
+        showCountries(c);
+    }
+    else
+        getCountry(`${url1}all`);
+}
 
 
 //APIcall
 async function getCountry(url) {
     let res = await fetch(url);
     countries = await res.json();
+    c = countries;
+
+    check = 1;
 
     showCountries(countries);
     allCountries = document.querySelectorAll('.country');
@@ -103,9 +111,8 @@ async function searchCountry(url, id) {
     let res = await fetch(url);
     countries = await res.json();
 
-    if (id == 'search'){
+    if (id == 'search')
         showCountries(countries);
-    }
     else
         openCountry(countries);
 }
@@ -127,6 +134,7 @@ function countryNodelist(list){
 }
 
 function openCountry(c){
+    console.log(c)
     let {name, population, flags, region, subregion, capital, currencies, tld, languages, borders} = c[0];
     
     let n, curr, lang, nativeName;
@@ -142,7 +150,7 @@ function openCountry(c){
 
     countriesWrapper.innerHTML = '';
     countriesWrapper.classList.add('expanded');
-    formWrapper.innerHTML = '';
+    formWrapper.classList.add('remove')
 
     const div = document.createElement('div');
 
@@ -224,7 +232,10 @@ function back(){
     backBtn = document.getElementById('back');
     
     backBtn.addEventListener('click', ()=>{
-        window.location.reload();
+        setTimeout(() => {
+            formWrapper.classList.remove('remove');
+            checkReload();
+        }, 1000);
     })
 }
 
